@@ -33,7 +33,7 @@ void jffs2_destroy_slab_caches(void)
 struct jffs2_full_dirent *jffs2_alloc_full_dirent(int namesize)
 {
 	struct jffs2_full_dirent *ret;
-	ret = kmalloc(sizeof(struct jffs2_full_dirent) + namesize, GFP_KERNEL);
+	ret = zalloc(sizeof(struct jffs2_full_dirent) + namesize);
 	dbg_memalloc("%p\n", ret);
 	return ret;
 }
@@ -47,7 +47,7 @@ void jffs2_free_full_dirent(struct jffs2_full_dirent *x)
 struct jffs2_full_dnode *jffs2_alloc_full_dnode(void)
 {
 	struct jffs2_full_dnode *ret;
-	ret = malloc(sizeof(struct jffs2_full_dnode));
+	ret = zalloc(sizeof(struct jffs2_full_dnode));
 	dbg_memalloc("%p\n", ret);
 	return ret;
 }
@@ -61,7 +61,7 @@ void jffs2_free_full_dnode(struct jffs2_full_dnode *x)
 struct jffs2_raw_dirent *jffs2_alloc_raw_dirent(void)
 {
 	struct jffs2_raw_dirent *ret;
-	ret = malloc(sizeof(struct jffs2_raw_dirent));
+	ret = zalloc(sizeof(struct jffs2_raw_dirent));
 	dbg_memalloc("%p\n", ret);
 	return ret;
 }
@@ -75,7 +75,7 @@ void jffs2_free_raw_dirent(struct jffs2_raw_dirent *x)
 struct jffs2_raw_inode *jffs2_alloc_raw_inode(void)
 {
 	struct jffs2_raw_inode *ret;
-	ret = malloc(sizeof(struct jffs2_raw_inode));
+	ret = zalloc(sizeof(struct jffs2_raw_inode));
 	dbg_memalloc("%p\n", ret);
 	return ret;
 }
@@ -89,7 +89,7 @@ void jffs2_free_raw_inode(struct jffs2_raw_inode *x)
 struct jffs2_tmp_dnode_info *jffs2_alloc_tmp_dnode_info(void)
 {
 	struct jffs2_tmp_dnode_info *ret;
-	ret = malloc(sizeof(struct jffs2_tmp_dnode_info));
+	ret = zalloc(sizeof(struct jffs2_tmp_dnode_info));
 	dbg_memalloc("%p\n",
 		ret);
 	return ret;
@@ -183,7 +183,7 @@ void jffs2_free_node_frag(struct jffs2_node_frag *x)
 struct jffs2_inode_cache *jffs2_alloc_inode_cache(void)
 {
 	struct jffs2_inode_cache *ret;
-	ret = malloc(sizeof(struct jffs2_inode_cache));;
+	ret = zalloc(sizeof(struct jffs2_inode_cache));;
 	dbg_memalloc("%p\n", ret);
 	return ret;
 }

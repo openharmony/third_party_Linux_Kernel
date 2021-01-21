@@ -13,17 +13,14 @@
 #include <linux/kernel.h>
 #include <stdio.h>
 #include "nodelist.h"
-#include "porting.h"
-
-#if defined(CYGOPT_FS_JFFS2_GCTHREAD)
+#include "vfs_jffs2.h"
+#include "mtd_partition.h"
 
 #define GC_THREAD_FLAG_TRIG 1
 #define GC_THREAD_FLAG_STOP 2
 #define GC_THREAD_FLAG_HAS_EXIT 4
 
-#endif
-
-
+extern struct MtdNorDev *jffs2_dev_list;
 static void jffs2_garbage_collect_thread(unsigned long data);
 
 void jffs2_garbage_collect_trigger(struct jffs2_sb_info *c)
@@ -31,27 +28,25 @@ void jffs2_garbage_collect_trigger(struct jffs2_sb_info *c)
 	struct super_block *sb = OFNI_BS_2SFFJ(c);
 	/* Wake up the thread */
 	jffs2_dbg(1, "jffs2_garbage_collect_trigger\n");
-	jffs_event_send(&sb->s_gc_thread_flags, GC_THREAD_FLAG_TRIG);
+	LOS_EventWrite(&sb->s_gc_thread_flags, GC_THREAD_FLAG_TRIG);
 }
-
-extern struct MtdNorDev jffs_part[CONFIG_MTD_PATTITION_NUM];
 
 /* This must only ever be called when no GC thread is currently running */
 void jffs2_start_garbage_collect_thread(struct jffs2_sb_info *c)
 {
-	 struct super_block *sb = OFNI_BS_2SFFJ(c);
-	 TSK_INIT_PARAM_S stGcTask;
+	struct super_block *sb = OFNI_BS_2SFFJ(c);
+	TSK_INIT_PARAM_S stGcTask;
 
-	 if (c == NULL)
+	if (c == NULL)
 		return;
 
-	 if (sb->s_root == NULL)
+	if (sb->s_root == NULL)
 		return;
 
-	 jffs_event_create(&sb->s_gc_thread_flags);
+	LOS_EventInit(&sb->s_gc_thread_flags);
 
-	 /* Start the thread. Doesn't matter if it fails -- it's only an
-	  * optimisation anyway */
+	/* Start the thread. Doesn't matter if it fails -- it's only an
+	 * optimisation anyway */
 	(void)memset_s(&stGcTask, sizeof(TSK_INIT_PARAM_S), 0, sizeof(TSK_INIT_PARAM_S));
 
 	stGcTask.pfnTaskEntry = (TSK_ENTRY_FUNC)jffs2_garbage_collect_thread;
@@ -61,12 +56,12 @@ void jffs2_start_garbage_collect_thread(struct jffs2_sb_info *c)
 #if (LOSCFG_KERNEL_SMP == YES)
 	unsigned int i;
 	for (i = 0; i < CONFIG_MTD_PATTITION_NUM; i++) {
-		if (sb->s_dev == &jffs_part[i])
+		if (sb->s_dev == &jffs2_dev_list[i])
 			break;
 	}
 	stGcTask.usCpuAffiMask = CPUID_TO_AFFI_MASK(i % LOSCFG_KERNEL_CORE_NUM);
 #endif
-	stGcTask.usTaskPrio = CYGNUM_JFFS2_GC_THREAD_PRIORITY;
+	stGcTask.usTaskPrio = JFFS2_GC_THREAD_PRIORITY;
 
 	if (LOS_TaskCreate(&sb->s_gc_thread, &stGcTask))
 		JFFS2_ERROR("Create gc task failed!!!\n");
@@ -74,24 +69,24 @@ void jffs2_start_garbage_collect_thread(struct jffs2_sb_info *c)
 
 void jffs2_stop_garbage_collect_thread(struct jffs2_sb_info *c)
 {
-	 struct super_block *sb = OFNI_BS_2SFFJ(c);
+	struct super_block *sb = OFNI_BS_2SFFJ(c);
 
-	 JFFS2_DEBUG("jffs2_stop_garbage_collect_thread\n");
-	 /* Stop the thread and wait for it if necessary */
+	JFFS2_DEBUG("jffs2_stop_garbage_collect_thread\n");
+	/* Stop the thread and wait for it if necessary */
 
-	 jffs_event_send(&sb->s_gc_thread_flags,GC_THREAD_FLAG_STOP);
+	LOS_EventWrite(&sb->s_gc_thread_flags, GC_THREAD_FLAG_STOP);
 
-	 JFFS2_DEBUG("jffs2_stop_garbage_collect_thread wait\n");
+	JFFS2_DEBUG("jffs2_stop_garbage_collect_thread wait\n");
 
-	 (void)jffs_event_recv(&sb->s_gc_thread_flags,
+	(void)LOS_EventRead(&sb->s_gc_thread_flags,
 			GC_THREAD_FLAG_HAS_EXIT,
 			LOS_WAITMODE_OR | LOS_WAITMODE_CLR,
 			LOS_WAIT_FOREVER);
 
-	 // Kill and free the resources ...  this is safe due to the flag
-	 // from the thread.
-	 (void)LOS_TaskDelete(sb->s_gc_thread);
-	 jffs_event_detach(&sb->s_gc_thread_flags);
+	// Kill and free the resources ...  this is safe due to the flag
+	// from the thread.
+	(void)LOS_TaskDelete(sb->s_gc_thread);
+	(void)LOS_EventWrite(&sb->s_gc_thread_flags, 0xFFFFFFFF);
 }
 
 static void jffs2_garbage_collect_thread(unsigned long data)
@@ -102,7 +97,7 @@ static void jffs2_garbage_collect_thread(unsigned long data)
 
 	jffs2_dbg(1, "jffs2_garbage_collect_thread START\n");
 	while(1) {
-		flag=jffs_event_recv(&sb->s_gc_thread_flags,
+		flag = LOS_EventRead(&sb->s_gc_thread_flags,
 			GC_THREAD_FLAG_TRIG | GC_THREAD_FLAG_STOP,
 			LOS_WAITMODE_OR | LOS_WAITMODE_CLR,
 			LOS_WAIT_FOREVER
@@ -123,5 +118,5 @@ static void jffs2_garbage_collect_thread(unsigned long data)
 		jffs2_dbg(1, "jffs2: GC THREAD GC END\n");
 	}
 	JFFS2_DEBUG("jffs2_garbage_collect_thread EXIT\n");
-	jffs_event_send(&sb->s_gc_thread_flags,GC_THREAD_FLAG_HAS_EXIT);
+	LOS_EventWrite(&sb->s_gc_thread_flags, GC_THREAD_FLAG_HAS_EXIT);
 }

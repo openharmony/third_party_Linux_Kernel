@@ -55,7 +55,24 @@ struct jffs2_inode_info {
 
 	uint16_t flags;
 	uint8_t usercompr;
-	struct inode vfs_inode;
+};
+
+struct super_block;
+
+struct jffs2_inode {
+	uint32_t i_ino;
+	mode_t i_mode;
+	nlink_t i_nlink;
+	uid_t i_uid;
+	gid_t i_gid;
+	time_t i_atime;
+	time_t i_mtime;
+	time_t i_ctime;
+	struct Vnode *i_vnode;
+	off_t i_size;
+	struct super_block *i_sb;
+	LOS_DL_LIST i_hashlist;
+	struct jffs2_inode_info jffs2_i;
 };
 
 #ifdef __cplusplus

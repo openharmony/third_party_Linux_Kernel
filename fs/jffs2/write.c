@@ -9,6 +9,7 @@
  *
  */
 
+#include <dirent.h>
 #include <linux/kernel.h>
 #include <linux/fs.h>
 #include <linux/pagemap.h>
@@ -27,8 +28,6 @@ int jffs2_do_new_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f,
 	if (!ic) {
 		return -ENOMEM;
 	}
-
-	memset(ic, 0, sizeof(*ic));
 
 	f->inocache = ic;
 	f->inocache->pino_nlink = 1; /* Will be overwritten shortly for directories */
