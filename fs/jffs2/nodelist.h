@@ -53,10 +53,6 @@ enum
 	     DT_WHT = 14
 #define DT_WHT	DT_WHT
 };
-struct kvec {
-	void *iov_base;
-	long iov_len;
-};
 
 #define JFFS2_NATIVE_ENDIAN
 

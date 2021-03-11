@@ -1,0 +1,10 @@
+[
+    {
+        "Name"                  : "Linux Kernel",
+        "License"               : "GPL V2.0",
+        "License File"          : "COPYING",
+        "Version Number"        : "4.4",
+        "Upstream URL"          : "https://kernel.org/",
+        "Description"           : "The Linux kernel is an open source Unix-like operating system macro kernel."
+    }
+]
