@@ -21,7 +21,7 @@
 #include <linux/wait.h>
 #include <linux/list.h>
 #include <linux/rwsem.h>
-#include "jffs2_config.h"
+#include "vfs_jffs2.h"
 #include "mtd_dev.h"
 
 #ifdef __cplusplus
@@ -165,6 +165,23 @@ struct jffs2_sb_info {
 	/* OS-private pointer for getting back to master superblock info */
 	void *os_priv;
 };
+
+struct super_block {
+	struct jffs2_sb_info	jffs2_sb;
+	LIST_HEAD		s_node_hash[JFFS2_NODE_HASH_BUCKETS];
+	LosMux			s_node_hash_lock;
+	struct jffs2_inode 	*s_root;
+	unsigned long		s_mount_count;
+	void			*s_dev;
+
+	UINT32			s_lock;			/* Lock the inode cache */
+	EVENT_CB_S		s_gc_thread_flags;	/* Communication with the gcthread */
+	unsigned int		s_gc_thread;
+};
+
+#define JFFS2_SB_INFO(sb) (&(sb)->jffs2_sb)
+#define OFNI_BS_2SFFJ(c)  \
+        ((struct super_block *) ( ((char *)c) - ((char *)(&((struct super_block *)NULL)->jffs2_sb)) ) )
 
 #ifdef __cplusplus
 #if __cplusplus

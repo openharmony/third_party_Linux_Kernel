@@ -442,9 +442,7 @@ int jffs2_garbage_collect_pass(struct jffs2_sb_info *c)
 		ret = 0;
 		goto release_sem;
 	}
-
 	ret = jffs2_garbage_collect_live(c, jeb, raw, f);
-
 	jffs2_gc_release_inode(c, f);
 
  test_gcnode:

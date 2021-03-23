@@ -952,7 +952,6 @@ struct jffs2_inode_cache *jffs2_scan_make_ino_cache(struct jffs2_sb_info *c, uin
 		pr_notice("%s(): allocation of inode cache failed\n", __func__);
 		return NULL;
 	}
-	memset(ic, 0, sizeof(*ic));
 
 	ic->ino = ino;
 	ic->nodes = (void *)ic;

@@ -88,11 +88,6 @@ extern int jffs2_verify_xattr(struct jffs2_sb_info *c);
 extern void jffs2_release_xattr_datum(struct jffs2_sb_info *c, struct jffs2_xattr_datum *xd);
 extern void jffs2_release_xattr_ref(struct jffs2_sb_info *c, struct jffs2_xattr_ref *ref);
 
-extern int do_jffs2_getxattr(struct inode *inode, int xprefix, const char *xname,
-			     char *buffer, size_t size);
-extern int do_jffs2_setxattr(struct inode *inode, int xprefix, const char *xname,
-			     const char *buffer, size_t size, int flags);
-
 extern const struct xattr_handler *jffs2_xattr_handlers[];
 extern const struct xattr_handler jffs2_user_xattr_handler;
 extern const struct xattr_handler jffs2_trusted_xattr_handler;
@@ -122,8 +117,6 @@ extern ssize_t jffs2_listxattr(struct dentry *, char *, size_t);
 #endif /* CONFIG_JFFS2_FS_XATTR */
 
 #ifdef CONFIG_JFFS2_FS_SECURITY
-extern int jffs2_init_security(struct inode *inode, struct inode *dir,
-			       const struct qstr *qstr);
 extern const struct xattr_handler jffs2_security_xattr_handler;
 #else
 #define jffs2_init_security(inode,dir,qstr)	(0)

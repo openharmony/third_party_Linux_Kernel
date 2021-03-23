@@ -20,9 +20,8 @@
 #define MAX_SUMMARY_SIZE 65536
 
 #include <sys/uio.h>
-#include "stdint.h"
+#include <linux/types.h>
 #include "jffs2.h"
-#include "jffs2_fs_sb.h"
 
 #define BLK_STATE_ALLFF		0
 #define BLK_STATE_CLEAN		1
@@ -38,12 +37,6 @@
 #define JFFS2_SUMMARY_XREF_SIZE (sizeof(struct jffs2_sum_xref_flash))
 
 /* Summary structures used on flash */
-
-struct kvec {
-	void *iov_base;
-	long iov_len;
-};
-
 
 struct jffs2_sum_unknown_flash
 {

@@ -13,6 +13,7 @@
 #ifndef __LINUX_JFFS2_H__
 #define __LINUX_JFFS2_H__
 
+#include <linux/types.h>
 
 #ifdef __cplusplus
 #if __cplusplus
