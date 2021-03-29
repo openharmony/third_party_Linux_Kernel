@@ -388,7 +388,11 @@ int jffs2_do_mount_fs(struct jffs2_sb_info *c)
  out_free:
 #ifndef __ECOS
 	if (jffs2_blocks_use_vmalloc(c))
+#ifdef LOSCFG_KERNEL_VM
 		LOS_VFree(c->blocks);
+#else
+		free(c->blocks);
+#endif
 	else
 #endif
 		kfree(c->blocks);
