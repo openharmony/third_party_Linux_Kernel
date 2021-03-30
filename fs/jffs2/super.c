@@ -94,7 +94,11 @@ int jffs2_mount(int part_no, struct jffs2_inode **root_node)
 		if (mtd_part->patitionnum == part_no)
 			break;
 	}
+#ifndef LOSCFG_PLATFORM_QEMU_ARM_VIRT_CA7
 	spinor_mtd = GetMtd("spinor");
+#else
+	spinor_mtd = (struct MtdDev *)LOS_DL_LIST_ENTRY(part_head->pstNext, mtd_partition, node_info)->mtd_info;
+#endif
 	if (spinor_mtd == NULL) {
 		free(sb);
 		return -EPERM;
@@ -102,7 +106,9 @@ int jffs2_mount(int part_no, struct jffs2_inode **root_node)
 	jffs2_dev_list[part_no].blockEnd = mtd_part->end_block;
 	jffs2_dev_list[part_no].blockSize = spinor_mtd->eraseSize;
 	jffs2_dev_list[part_no].blockStart = mtd_part->start_block;
+#ifndef LOSCFG_PLATFORM_QEMU_ARM_VIRT_CA7
 	(void)FreeMtd(spinor_mtd);
+#endif
 	sb->jffs2_sb.mtd = mtd_part->mtd_info;
 	sb->s_dev = &jffs2_dev_list[part_no];
 
