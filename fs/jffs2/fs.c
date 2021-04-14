@@ -92,11 +92,29 @@ int jffs2_setattr (struct jffs2_inode *inode, struct IATTR *attr)
 			tmp_mode = attr->attr_chg_mode | tmp_mode; // add old file type
 		}
 	}
+
+	if (ivalid & CHG_ATIME) {
+		if ((c_uid != inode->i_uid) || (attr->attr_chg_uid != inode->i_uid)) {
+			return -EPERM;
+		} else {
+			ri->atime = cpu_to_je32(attr->attr_chg_atime);
+		}
+	} else {
+		ri->atime = cpu_to_je32(inode->i_atime);
+	}
+
+	if (ivalid & CHG_MTIME) {
+		if ((c_uid != inode->i_uid) || (attr->attr_chg_uid != inode->i_uid)) {
+			return -EPERM;
+		} else {
+			ri->mtime = cpu_to_je32(attr->attr_chg_mtime);
+		}
+	} else {
+		ri->mtime = cpu_to_je32(Jffs2CurSec());
+	}
 	ri->mode = cpu_to_jemode(tmp_mode);
 
 	ri->isize = cpu_to_je32((ivalid & CHG_SIZE) ? attr->attr_chg_size : inode->i_size);
-	ri->atime = cpu_to_je32(inode->i_atime);
-	ri->mtime = cpu_to_je32(Jffs2CurSec());
 	ri->ctime = cpu_to_je32(Jffs2CurSec());
 
 	ri->offset = cpu_to_je32(0);
