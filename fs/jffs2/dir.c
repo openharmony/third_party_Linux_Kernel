@@ -243,6 +243,9 @@ int jffs2_rmdir (struct jffs2_inode *dir_i, struct jffs2_inode *d_inode, const u
 	int ret;
 	uint32_t now = Jffs2CurSec();
 
+    if (c == NULL) {
+	    PRINT_ERR("%s-%d: sb_info null. sb=%p, inode=%p, vnode=%p\n", __FUNCTION__, __LINE__, dir_i->i_sb, dir_i, dir_i->i_vnode);
+    }
 	for (fd = f->dents ; fd; fd = fd->next) {
 		if (fd->ino) {
 			PRINT_ERR("%s-%d: ret=%d\n", __FUNCTION__, __LINE__, ENOTEMPTY);
