@@ -277,12 +277,13 @@ int jffs2_iput(struct jffs2_inode *i)
 	// and gc.c jffs2_garbage_collect_pass
 	struct jffs2_inode_info *f = NULL;
 
-    for (int p = 0; p < g_coveredVnodeTop; p++) {
-        if (i->i_vnode == g_coveredVnodeList[p]) {
-            PRINT_ERR("%s-%d: jffs2_iput mounted vnode. vnode=%p, inode=%p, i->i_nlink=%d\n", __FUNCTION__, __LINE__, i->i_vnode, i, i->i_nlink);
-        }
-    }
+	for (int p = 0; p < g_coveredVnodeTop; p++) {
+		if (i->i_vnode == g_coveredVnodeList[p]) {
+			PRINTK("%s-%d: jffs2_iput mounted vnode. vnode=%p, inode=%p, i->i_nlink=%d\n", __FUNCTION__, __LINE__, i->i_vnode, i, i->i_nlink);
+		}
+	}
 
+	PRINTK("%s-%d: jffs2_iput vnode. vnode=%p, inode=%p, i->i_nlink=%d\n", __FUNCTION__, __LINE__, i->i_vnode, i, i->i_nlink);
 	Jffs2NodeLock();
 	if (!i || i->i_nlink) {
 		// and let it fault...
@@ -353,6 +354,7 @@ struct jffs2_inode *jffs2_new_inode (struct jffs2_inode *dir_i, int mode, struct
 	(void)Jffs2HashInsert(&sb->s_node_hash_lock, &sb->s_node_hash[0], inode, inode->i_ino);
 	Jffs2NodeUnlock();
 
+	PRINTK("%s-%d: inode=%p, i_nlink=%d\n", __FUNCTION__, __LINE__, inode, inode->i_nlink);
 	return inode;
 }
 
