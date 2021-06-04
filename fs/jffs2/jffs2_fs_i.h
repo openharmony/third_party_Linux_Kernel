@@ -68,7 +68,6 @@ struct jffs2_inode {
 	time_t i_atime;
 	time_t i_mtime;
 	time_t i_ctime;
-	struct Vnode *i_vnode;
 	off_t i_size;
 	struct super_block *i_sb;
 	LOS_DL_LIST i_hashlist;
