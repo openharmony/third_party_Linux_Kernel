@@ -150,6 +150,7 @@ struct jffs2_inode *jffs2_lookup(struct jffs2_inode *dir_i, const unsigned char 
 int jffs2_create(struct jffs2_inode *dir_i, const unsigned char *d_name, int mode, struct jffs2_inode **new_i);
 int jffs2_mkdir (struct jffs2_inode *dir_i, const unsigned char *d_name, int mode, struct jffs2_inode **new_i);
 int jffs2_link (struct jffs2_inode *old_d_inode, struct jffs2_inode *dir_i, const unsigned char *d_name);
+int jffs2_symlink(struct jffs2_inode *dir_i, struct jffs2_inode **d_inode, const unsigned char *d_name, const char *target);
 int jffs2_unlink(struct jffs2_inode *dir_i, struct jffs2_inode *d_inode, const unsigned char *d_name);
 int jffs2_rmdir (struct jffs2_inode *dir_i, struct jffs2_inode *d_inode, const unsigned char *d_name);
 int jffs2_rename (struct jffs2_inode *old_dir_i, struct jffs2_inode *d_inode, const unsigned char *old_d_name,
