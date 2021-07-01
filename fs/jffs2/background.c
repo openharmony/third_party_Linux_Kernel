@@ -53,7 +53,7 @@ void jffs2_start_garbage_collect_thread(struct jffs2_sb_info *c)
 	stGcTask.auwArgs[0] = (UINTPTR)c;
 	stGcTask.uwStackSize  = LOSCFG_BASE_CORE_TSK_DEFAULT_STACK_SIZE;
 	stGcTask.pcName = "jffs2_gc_thread";
-#if (LOSCFG_KERNEL_SMP == YES)
+#ifdef LOSCFG_KERNEL_SMP
 	unsigned int i;
 	for (i = 0; i < CONFIG_MTD_PATTITION_NUM; i++) {
 		if (sb->s_dev == &jffs2_dev_list[i])
