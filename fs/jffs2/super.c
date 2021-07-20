@@ -68,7 +68,7 @@ int jffs2_fill_super(struct super_block *sb)
 	return 0;
 }
 
-int jffs2_mount(int part_no, struct jffs2_inode **root_node)
+int jffs2_mount(int part_no, struct jffs2_inode **root_node, unsigned long mountflags)
 {
 	struct super_block *sb = NULL;
 	struct jffs2_sb_info *c = NULL;
@@ -143,9 +143,11 @@ int jffs2_mount(int part_no, struct jffs2_inode **root_node)
 		return ret;
 	}
 
-	jffs2_start_garbage_collect_thread(c);
+	if (!(mountflags & MS_RDONLY)) {
+		jffs2_start_garbage_collect_thread(c);
+	}
 
-	sb->s_mount_count++;
+	sb->s_mount_flags = mountflags;
 	*root_node = sb->s_root;
 	return 0;
 }
@@ -159,34 +161,33 @@ int jffs2_umount(struct jffs2_inode *root_node)
 	D2(PRINTK("Jffs2Umount\n"));
 
 	// Only really umount if this is the only mount
-	if (sb->s_mount_count == 1) {
+	if (!(sb->s_mount_flags & MS_RDONLY)) {
 		jffs2_stop_garbage_collect_thread(c);
-
-		// free directory entries
-		for (fd = root_node->jffs2_i.dents; fd; fd = next) {
-			next = fd->next;
-			jffs2_free_full_dirent(fd);
-		}
-
-		free(root_node);
-
-		// Clean up the super block and root_node inode
-		jffs2_free_ino_caches(c);
-		jffs2_free_raw_node_refs(c);
-		free(c->blocks);
-		c->blocks = NULL;
-		free(c->inocache_list);
-		c->inocache_list = NULL;
-		(void)Jffs2HashDeinit(&sb->s_node_hash_lock);
-
-		(void)mutex_destroy(&c->alloc_sem);
-		(void)mutex_destroy(&c->erase_free_sem);
-		free(sb);
-		// That's all folks.
-		D2(PRINTK("Jffs2Umount No current mounts\n"));
-	} else {
-		sb->s_mount_count--;
 	}
+
+	// free directory entries
+	for (fd = root_node->jffs2_i.dents; fd; fd = next) {
+		next = fd->next;
+		jffs2_free_full_dirent(fd);
+	}
+
+	free(root_node);
+
+	// Clean up the super block and root_node inode
+	jffs2_free_ino_caches(c);
+	jffs2_free_raw_node_refs(c);
+	free(c->blocks);
+	c->blocks = NULL;
+	free(c->inocache_list);
+	c->inocache_list = NULL;
+	(void)Jffs2HashDeinit(&sb->s_node_hash_lock);
+
+	(void)mutex_destroy(&c->alloc_sem);
+	(void)mutex_destroy(&c->erase_free_sem);
+	free(sb);
+	// That's all folks.
+	D2(PRINTK("Jffs2Umount No current mounts\n"));
+
 	if (--jffs2_mounted_number == 0) {
 		jffs2_destroy_slab_caches();
 		(void)jffs2_compressors_exit();

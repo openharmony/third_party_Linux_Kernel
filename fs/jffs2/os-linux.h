@@ -189,7 +189,7 @@ int jffs2_flash_direct_read(struct jffs2_sb_info *c, loff_t ofs, size_t len,
 
 /* super.c */
 int jffs2_fill_super(struct super_block *sb);
-int jffs2_mount(int part_no, struct jffs2_inode **root_node);
+int jffs2_mount(int part_no, struct jffs2_inode **root_node, unsigned long mountflags);
 int jffs2_umount(struct jffs2_inode *root_node);
 
 #endif /* __JFFS2_OS_LINUX_H__ */

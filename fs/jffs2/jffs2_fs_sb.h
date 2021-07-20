@@ -171,12 +171,12 @@ struct super_block {
 	LIST_HEAD		s_node_hash[JFFS2_NODE_HASH_BUCKETS];
 	LosMux			s_node_hash_lock;
 	struct jffs2_inode 	*s_root;
-	unsigned long		s_mount_count;
 	void			*s_dev;
 
 	UINT32			s_lock;			/* Lock the inode cache */
 	EVENT_CB_S		s_gc_thread_flags;	/* Communication with the gcthread */
 	unsigned int		s_gc_thread;
+	unsigned long		s_mount_flags;
 };
 
 #define JFFS2_SB_INFO(sb) (&(sb)->jffs2_sb)
