@@ -20,7 +20,7 @@
 #define GC_THREAD_FLAG_STOP 2
 #define GC_THREAD_FLAG_HAS_EXIT 4
 
-extern struct MtdNorDev *jffs2_dev_list;
+extern struct MtdNorDev jffs2_dev_list[CONFIG_MTD_PATTITION_NUM];
 static void jffs2_garbage_collect_thread(unsigned long data);
 
 void jffs2_garbage_collect_trigger(struct jffs2_sb_info *c)
