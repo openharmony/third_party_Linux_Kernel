@@ -168,13 +168,30 @@ int __init jffs2_zlib_init(void)
 {
     int ret;
 
+    ret = pthread_mutex_init(&inflate_mutex, NULL);
+    if (ret) {
+        return ret;
+    }
+
+    ret = pthread_mutex_init(&deflate_mutex, NULL);
+    if (ret) {
+        pthread_mutex_destroy(&inflate_mutex);
+        return ret;
+    }
+
     ret = alloc_workspaces();
-    if (ret)
-	    return ret;
+    if (ret) {
+        pthread_mutex_destroy(&inflate_mutex);
+        pthread_mutex_destroy(&deflate_mutex);
+        return ret;
+    }
 
     ret = jffs2_register_compressor(&jffs2_zlib_comp);
-    if (ret)
-	    free_workspaces();
+    if (ret) {
+        pthread_mutex_destroy(&inflate_mutex);
+        pthread_mutex_destroy(&deflate_mutex);
+        free_workspaces();
+    }
 
     return ret;
 }
@@ -183,4 +200,6 @@ void jffs2_zlib_exit(void)
 {
     jffs2_unregister_compressor(&jffs2_zlib_comp);
     free_workspaces();
+    pthread_mutex_destroy(&inflate_mutex);
+    pthread_mutex_destroy(&deflate_mutex);
 }
