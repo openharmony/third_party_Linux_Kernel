@@ -1,0 +1,57 @@
+# Copyright (c) 2022-2022 Huawei Device Co., Ltd. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice, this list of
+#    conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright notice, this list
+#    of conditions and the following disclaimer in the documentation and/or other materials
+#    provided with the distribution.
+#
+# 3. Neither the name of the copyright holder nor the names of its contributors may be used
+#    to endorse or promote products derived from this software without specific prior written
+#    permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+LINUX_KERNEL_FS_JFFS2_SRC_FILES = [
+  "//third_party/Linux_Kernel/fs/jffs2/background.c",
+  "//third_party/Linux_Kernel/fs/jffs2/build.c",
+  "//third_party/Linux_Kernel/fs/jffs2/compr.c",
+  "//third_party/Linux_Kernel/fs/jffs2/compr_rtime.c",
+  "//third_party/Linux_Kernel/fs/jffs2/compr_rubin.c",
+  "//third_party/Linux_Kernel/fs/jffs2/compr_zlib.c",
+  "//third_party/Linux_Kernel/fs/jffs2/debug.c",
+  "//third_party/Linux_Kernel/fs/jffs2/dir.c",
+  "//third_party/Linux_Kernel/fs/jffs2/erase.c",
+  "//third_party/Linux_Kernel/fs/jffs2/file.c",
+  "//third_party/Linux_Kernel/fs/jffs2/fs.c",
+  "//third_party/Linux_Kernel/fs/jffs2/gc.c",
+  "//third_party/Linux_Kernel/fs/jffs2/malloc.c",
+  "//third_party/Linux_Kernel/fs/jffs2/nodelist.c",
+  "//third_party/Linux_Kernel/fs/jffs2/nodemgmt.c",
+  "//third_party/Linux_Kernel/fs/jffs2/read.c",
+  "//third_party/Linux_Kernel/fs/jffs2/readinode.c",
+  "//third_party/Linux_Kernel/fs/jffs2/scan.c",
+  "//third_party/Linux_Kernel/fs/jffs2/summary.c",
+  "//third_party/Linux_Kernel/fs/jffs2/super.c",
+  "//third_party/Linux_Kernel/fs/jffs2/write.c",
+  "//third_party/Linux_Kernel/fs/jffs2/writev.c",
+]
+
+LINUX_KERNEL_FS_JFFS2_INCLUDE_DIRS = [
+  "//third_party/Linux_Kernel/fs",
+  "//third_party/Linux_Kernel/fs/jffs2",
+]
