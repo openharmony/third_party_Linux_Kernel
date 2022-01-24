@@ -1,0 +1,40 @@
+{
+    "name": "@ohos/linux_kernel",
+    "version": "",
+    "description": "Third-party open-source software Linux kernel | 三方开源软件Linux kernel",
+    "homePage": "https://gitee.com/openharmony",
+    "license": "GPL V2.0",
+    "repository": "https://gitee.com/openharmony/third_party_Linux_Kernel",
+    "domain": "os",
+    "language": "",
+    "publishAs": "code-segment",
+    "private": false,
+    "scripts": {},
+    "tags": [
+        "third_party"
+    ],
+    "keywords": [
+        "third-party",
+        "Linux",
+        "Kernel"
+    ],
+    "envs": {},
+    "dirs": {},
+    "segment": {
+        "destPath": "third_party/Linux_Kernel"
+    },
+    "component": {
+        "name": "thirdparty_Linux_Kernel",
+        "subsystem": "",
+        "syscap": [],
+        "features": [],
+        "adapted_system_type": [],
+        "rom": "",
+        "ram": "",
+        "build": {
+            "sub_component": [],
+            "inner_kits": [],
+            "test": []
+        }
+    }
+}
